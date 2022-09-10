@@ -4,14 +4,18 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const Notification = (props) => {
+  const notificationColor = props.success
+    ? 'green'
+    : 'red'
+
   const style = {
     backgroundColor: 'lightgrey',
     padding: '10px',
     marginBottom: '10px',
     fontSize: '20px',
-    color: 'grey',
+    color: notificationColor,
     borderSize: '3px',
-    borderColor: 'grey',
+    borderColor: notificationColor,
     borderStyle: 'solid',
     borderRadius: '10px'
   }
@@ -36,6 +40,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState(null)
+  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -68,6 +73,7 @@ const App = () => {
       setUsername('')
       setPassword('')
 
+      setSuccess(true)
       setMessage(`logged in as ${user.username}`)
       setTimeout(() => {
         setMessage(null)
@@ -75,6 +81,7 @@ const App = () => {
     } catch (exception) {
       console.log(exception)
 
+      setSuccess(false)
       setMessage('wrong username or password')
       setTimeout(() => {
         setMessage(null)
@@ -88,6 +95,7 @@ const App = () => {
     blogService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
 
+    setSuccess(true)
     setMessage('logged out')
     setTimeout(() => {
       setMessage(null)
@@ -113,12 +121,15 @@ const App = () => {
       setNewAuthor('')
       setNewUrl('')
 
+      setSuccess(true)
       setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
     } catch (exception) {
       console.log(exception.response.data.error)
+
+      setSuccess(false)
       setMessage(exception.response.data.error)
       setTimeout(() => {
         setMessage(null)
@@ -131,7 +142,7 @@ const App = () => {
       <div>
         <h2>log in to application</h2>
 
-        <Notification message={message} />
+        <Notification message={message} success={success} />
 
         <form onSubmit={handleLogin}>
           <div>
@@ -161,7 +172,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <Notification message={message} />
+      <Notification message={message} success={success} />
 
       <p>
         {user.name} logged in
