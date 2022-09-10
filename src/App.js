@@ -3,6 +3,30 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const Notification = (props) => {
+  const style = {
+    backgroundColor: 'lightgrey',
+    padding: '10px',
+    marginBottom: '10px',
+    fontSize: '20px',
+    color: 'grey',
+    borderSize: '3px',
+    borderColor: 'grey',
+    borderStyle: 'solid',
+    borderRadius: '10px'
+  }
+
+  if (!props.message) {
+    return null
+  }
+
+  return (
+    <div style={style}>
+      {props.message}
+    </div>
+  )
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -11,6 +35,7 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -42,8 +67,18 @@ const App = () => {
       blogService.setToken(user.token)
       setUsername('')
       setPassword('')
+
+      setMessage(`logged in as ${user.username}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
       console.log(exception)
+
+      setMessage('wrong username or password')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -52,6 +87,11 @@ const App = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
+
+    setMessage('logged out')
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   const handleAddBlog = async event => {
@@ -60,7 +100,6 @@ const App = () => {
 
     try {
       const newBlog = {
-        id: Math.floor(Math.random() * 10000),
         title: newTitle,
         author: newAuthor,
         url: newUrl
@@ -69,11 +108,21 @@ const App = () => {
       await blogService.create(newBlog)
 
       setBlogs(blogs.concat(newBlog))
+
       setNewTitle('')
       setNewAuthor('')
       setNewUrl('')
+
+      setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
-      console.log(exception)
+      console.log(exception.response.data.error)
+      setMessage(exception.response.data.error)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -81,6 +130,9 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
+
+        <Notification message={message} />
+
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -108,6 +160,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+
+      <Notification message={message} />
 
       <p>
         {user.name} logged in
