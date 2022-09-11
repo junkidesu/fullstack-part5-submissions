@@ -41,6 +41,7 @@ const App = () => {
   const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState(null)
   const [success, setSuccess] = useState(false)
+  const [blogVisible, setBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -137,7 +138,47 @@ const App = () => {
     }
   }
 
-  if (user === null) {
+  const blogForm = () => {
+    const showWhenVisible = {
+      display: blogVisible
+        ? ''
+        : 'none'
+    }
+
+    const hideWhenVisible = {
+      display: blogVisible
+        ? 'none'
+        : ''
+    }
+
+    return (
+      <div>
+        <div style={showWhenVisible}>
+          <h2>create new</h2>
+
+          <form onSubmit={handleAddBlog}>
+            <div>
+              title <input value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
+            </div>
+            <div>
+              author <input value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
+            </div>
+            <div>
+              url <input value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
+            </div>
+            <button type="submit">save</button><br />
+          </form>
+          <button onClick={() => setBlogVisible(false)}>cancel</button>
+        </div>
+
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogVisible(true)}>create new</button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
     return (
       <div>
         <h2>log in to application</h2>
@@ -181,20 +222,7 @@ const App = () => {
         </button>
       </p>
 
-      <h2>create new</h2>
-
-      <form onSubmit={handleAddBlog}>
-        <div>
-          title <input value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
-        </div>
-        <div>
-          author <input value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
-        </div>
-        <div>
-          url <input value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
-        </div>
-        <button>save</button>
-      </form>
+      {blogForm()}
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
