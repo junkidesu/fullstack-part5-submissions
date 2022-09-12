@@ -3,6 +3,37 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const Togglable = (props) => {
+  const [visible, setVisible] = useState(false)
+
+  const hideWhenVisible = {
+    'display': visible
+      ? 'none'
+      : ''
+  }
+
+  const showWhenVisible = {
+    'display': visible
+      ? ''
+      : 'none'
+  }
+
+  return (
+    <div>
+      <div style={showWhenVisible}>
+        {props.children}
+        <button onClick={() => setVisible(false)}>
+          cancel
+        </button>
+      </div>
+      <div style={hideWhenVisible}>
+        <button onClick={() => setVisible(true)}>
+          {props.buttonLabel}
+        </button>
+      </div>
+    </div>
+  )
+}
 const Notification = (props) => {
   const notificationColor = props.success
     ? 'green'
@@ -77,7 +108,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [success, setSuccess] = useState(false)
-  const [blogVisible, setBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -158,33 +188,6 @@ const App = () => {
     }
   }
 
-  const blogForm = () => {
-    const showWhenVisible = {
-      display: blogVisible
-        ? ''
-        : 'none'
-    }
-
-    const hideWhenVisible = {
-      display: blogVisible
-        ? 'none'
-        : ''
-    }
-
-    return (
-      <div>
-        <div style={showWhenVisible}>
-          <CreateBlogForm createBlog={createBlog} />
-          <button onClick={() => setBlogVisible(false)}>cancel</button>
-        </div>
-
-        <div style={hideWhenVisible}>
-          <button onClick={() => setBlogVisible(true)}>create new</button>
-        </div>
-      </div>
-    )
-  }
-
   if (!user) {
     return (
       <div>
@@ -229,7 +232,9 @@ const App = () => {
         </button>
       </p>
 
-      {blogForm()}
+      <Togglable buttonLabel="create new">
+        <CreateBlogForm createBlog={createBlog} />
+      </Togglable>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
