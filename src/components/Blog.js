@@ -27,7 +27,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   }
 
   const handleDeleteBlog = async () => {
-    await deleteBlog(blog.id.toString())
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await deleteBlog(blog.id.toString())
+    }
   }
 
   return (
