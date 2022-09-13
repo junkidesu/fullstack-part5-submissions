@@ -106,7 +106,7 @@ const App = () => {
       await blogService.remove(id)
       setBlogs(blogs.filter(b => b.id !== id))
       setSuccess(true)
-      setMessage(`deleted successfully`)
+      setMessage('deleted successfully')
       setTimeout(() => {
         setMessage(null)
       }, 5000)
