@@ -200,6 +200,25 @@ const App = () => {
     setBlogs(blogs.map(b => b.id.toString() !== id ? b : updatedBlog))
   }
 
+  const deleteBlog = async id => {
+    try {
+      console.log(`delete ${id}`)
+      await blogService.remove(id)
+      setBlogs(blogs.filter(b => b.id !== id))
+      setSuccess(true)
+      setMessage(`deleted successfully`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch(exception) {
+      setSuccess(false)
+      setMessage(exception.response.data.error)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
   if (!user) {
     return (
       <div>
@@ -251,11 +270,13 @@ const App = () => {
       {blogs
         .sort((b1, b2) => b1.likes - b2.likes)
         .map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          likeBlog={likeBlog} />
-      )}
+          <Blog
+            key={blog.id}
+            blog={blog}
+            likeBlog={likeBlog}
+            deleteBlog={deleteBlog}
+          />
+        )}
     </div>
   )
 }
