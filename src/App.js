@@ -172,11 +172,6 @@ const App = () => {
   const createBlog = async newBlog => {
     try {
       const addedBlog = await blogService.create(newBlog)
-      addedBlog.user = {
-        username: user.username,
-        name: user.name,
-        id: user.id
-      }
 
       setBlogs(blogs.concat(addedBlog))
 
