@@ -172,6 +172,12 @@ const App = () => {
   const createBlog = async newBlog => {
     try {
       const addedBlog = await blogService.create(newBlog)
+      addedBlog.user = {
+        username: user.username,
+        name: user.name,
+        id: user.id
+      }
+
       setBlogs(blogs.concat(addedBlog))
 
       setSuccess(true)
@@ -186,6 +192,12 @@ const App = () => {
         setMessage(null)
       }, 5000)
     }
+  }
+
+  const likeBlog = async (id, changedBlog) => {
+    console.log(`like ${id}`)
+    const updatedBlog = await blogService.update(id, changedBlog)
+    setBlogs(blogs.map(b => b.id.toString() !== id ? b : updatedBlog))
   }
 
   if (!user) {
@@ -237,7 +249,10 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={likeBlog} />
       )}
     </div>
   )
