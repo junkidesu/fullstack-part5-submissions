@@ -1,5 +1,5 @@
 import { useState } from 'react'
-const Blog = ({ blog, likeBlog, deleteBlog }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   const [full, setFull] = useState(false)
 
   const blogStyle = {
@@ -43,7 +43,10 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
         {blog.likes}
         <button onClick={handleLikeBlog}>like</button> <br />
         {blog.user.name} <br />
-        <button onClick={handleDeleteBlog}>remove</button>
+        {username === blog.user.username
+          ? <button onClick={handleDeleteBlog}>remove</button>
+          : null
+        }
       </div>
     </div>
   )
