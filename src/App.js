@@ -1,105 +1,10 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-const Togglable = (props) => {
-  const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = {
-    'display': visible
-      ? 'none'
-      : ''
-  }
-
-  const showWhenVisible = {
-    'display': visible
-      ? ''
-      : 'none'
-  }
-
-  return (
-    <div>
-      <div style={showWhenVisible}>
-        {props.children}
-        <button onClick={() => setVisible(false)}>
-          cancel
-        </button>
-      </div>
-      <div style={hideWhenVisible}>
-        <button onClick={() => setVisible(true)}>
-          {props.buttonLabel}
-        </button>
-      </div>
-    </div>
-  )
-}
-const Notification = (props) => {
-  const notificationColor = props.success
-    ? 'green'
-    : 'red'
-
-  const style = {
-    backgroundColor: 'lightgrey',
-    padding: '10px',
-    marginBottom: '10px',
-    fontSize: '20px',
-    color: notificationColor,
-    borderSize: '3px',
-    borderColor: notificationColor,
-    borderStyle: 'solid',
-    borderRadius: '10px'
-  }
-
-  if (!props.message) {
-    return null
-  }
-
-  return (
-    <div style={style}>
-      {props.message}
-    </div>
-  )
-}
-
-const CreateBlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-
-  const handleAddBlog = async event => {
-    event.preventDefault()
-
-    await createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    })
-
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
-  }
-
-  return (
-    <div>
-      <h2>create new</h2>
-
-      <form onSubmit={handleAddBlog}>
-        <div>
-          title <input value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
-        </div>
-        <div>
-          author <input value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
-        </div>
-        <div>
-          url <input value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
-        </div>
-        <button type="submit">save</button><br />
-      </form>
-    </div>
-  )
-}
+import Notification from './components/Notification'
+import CreateBlogForm from './components/CreateBlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
