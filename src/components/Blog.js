@@ -34,14 +34,14 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setFull(!full)}>
           {full ? 'hide' : 'view'}
         </button>
       </div>
-      <div style={detailsStyle}>
+      <div style={detailsStyle} className='blogDetails'>
         {blog.url} <br />
         {blog.likes}
         <button onClick={handleLikeBlog}>like</button> <br />
