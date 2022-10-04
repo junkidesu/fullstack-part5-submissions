@@ -20,12 +20,12 @@ const Togglable = ({ children, buttonLabel }) => {
     <div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={() => setVisible(false)}>
+        <button onClick={() => setVisible(false)} className='hide-button'>
                     cancel
         </button>
       </div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setVisible(true)}>
+        <button onClick={() => setVisible(true)} className='show-button'>
           {buttonLabel}
         </button>
       </div>

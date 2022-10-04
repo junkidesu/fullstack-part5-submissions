@@ -110,7 +110,7 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-    } catch(exception) {
+    } catch (exception) {
       setSuccess(false)
       setMessage(exception.response.data.error)
       setTimeout(() => {
@@ -169,17 +169,19 @@ const App = () => {
         <CreateBlogForm createBlog={createBlog} />
       </Togglable>
 
-      {blogs
-        .sort((b1, b2) => b1.likes - b2.likes)
-        .map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            likeBlog={likeBlog}
-            deleteBlog={deleteBlog}
-            username={user.username}
-          />
-        )}
+      <div id='blogs'>
+        {blogs
+          .sort((b1, b2) => b1.likes - b2.likes)
+          .map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              likeBlog={likeBlog}
+              deleteBlog={deleteBlog}
+              username={user.username}
+            />
+          )}
+      </div>
     </div>
   )
 }
