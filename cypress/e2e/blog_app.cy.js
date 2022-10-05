@@ -59,6 +59,19 @@ describe('Blog App', function () {
       cy.get('#blogs').contains('New Title New Author')
     })
 
+    it('a blog can be deleted by its creator', function () {
+      cy.get('.show-button').click()
+
+      cy.get('#title').type('New Title')
+      cy.get('#author').type('New Author')
+      cy.get('#url').type('newurl')
+
+      cy.get('#submit-button').click()
+
+      cy.get('.blog').eq(0).contains('view').click()
+      cy.contains('remove').click()
+    })
+
     describe('when there are already some blogs', function () {
       beforeEach(function () {
         cy.get('.show-button').click()
